@@ -19,7 +19,7 @@ app.listen(3000, () => {
     console.log('Backend server inicializado');
 });
 
-mongoose.connection.openUri('mongodb://10.245.107.135:27017/hospitalDB', { useNewUrlParser: true }, (err, res) => {
+mongoose.connection.openUri('mongodb://localhost:27017/hospitalDB', { useNewUrlParser: true }, (err, res) => {
     if (err) throw err;
 
     console.log('Conexion a Mongo OK');

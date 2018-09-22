@@ -7,12 +7,12 @@ let app = express();
 let SEED = require('../config/config').SEED;
 let Usuario = require('../models/usuario');
 
-import { verificaToken } from require('../middlewares/autenticacion');
+const { verificaToken } = require('../middlewares/autenticacion');
 
 
-app.get('/', (req, res, next) => {
+app.get('/', verificaToken, (req, res, next) => {
 
-    Usuario.find({}, 'nombre email img role').exec((err, res) => {
+    Usuario.find({}, 'nombre email img role').exec((err, response) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -22,7 +22,7 @@ app.get('/', (req, res, next) => {
         }
         res.json({
             ok: true,
-            usuarios: res
+            usuarios: response
         });
     })
 });
@@ -30,8 +30,8 @@ app.get('/', (req, res, next) => {
 app.put('/:id', verificaToken, (req, res) => {
     let user_id = req.params.id;
     let body = req.body;
-
-    User.findById(user_id, (err, usuario) => {
+    console.log(body);
+    Usuario.findById(user_id, (err, usuario) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
