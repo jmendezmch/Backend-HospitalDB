@@ -35,7 +35,7 @@ app.post('/', (req, res) => {
         // Crear token
         // jwt.sign()
         console.log(usuario);
-        let token = jwt.sign(usuario.toJSON(), SEED, { expiresIn: 14400 });
+        let token = jwt.sign({ usuario: usuario }, SEED, { expiresIn: 14400 });
 
         return res.json({
             ok: true,

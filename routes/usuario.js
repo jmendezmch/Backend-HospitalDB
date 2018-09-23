@@ -12,25 +12,36 @@ const { verificaToken } = require('../middlewares/autenticacion');
 
 app.get('/', verificaToken, (req, res, next) => {
 
-    Usuario.find({}, 'nombre email img role').exec((err, response) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                message: 'No se pudieron obtener los usuarios',
-                err
-            });
-        }
-        res.json({
-            ok: true,
-            usuarios: response
-        });
-    })
+    let desde = Number(req.query.desde) || 0;
+    let hasta = Number(req.query.hasta) || 5;
+
+
+    Usuario.find({}, 'nombre email img role')
+        .limit(hasta)
+        .skip(desde)
+        .exec((err, response) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'No se pudieron obtener los usuarios',
+                    err
+                });
+            }
+            Usuario.count({}, (err, total) => {
+                res.json({
+                    ok: true,
+                    total,
+                    usuarios: response
+                });
+            })
+
+        })
 });
 
 app.put('/:id', verificaToken, (req, res) => {
     let user_id = req.params.id;
     let body = req.body;
-    console.log(body);
+    // console.log(body);
     Usuario.findById(user_id, (err, usuario) => {
         if (err) {
             return res.status(500).json({
